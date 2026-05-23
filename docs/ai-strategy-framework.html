@@ -1769,6 +1769,14 @@
       document.querySelectorAll(".qa-anchor").forEach(link => {
         link.addEventListener("click", event => event.stopPropagation());
       });
+      document.querySelectorAll("details.qa > summary").forEach(summary => {
+        summary.addEventListener("click", event => {
+          if (event.target.closest("a")) return;
+          const details = summary.closest("details.qa");
+          if (!details) return;
+          history.pushState(null, "", `#${details.id}`);
+        });
+      });
     }
 
     function escapeHtml(value) {
@@ -1868,7 +1876,10 @@
     window.addEventListener("hashchange", openHashTarget);
     document.querySelectorAll(".nav-btn").forEach(btn => {
       btn.addEventListener("click", () => {
-        document.getElementById(btn.dataset.jump).scrollIntoView({ behavior: "smooth", block: "start" });
+        const target = document.getElementById(btn.dataset.jump);
+        if (!target) return;
+        history.pushState(null, "", `#${target.id}`);
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
       });
     });
 
